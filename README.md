@@ -2,14 +2,8 @@
 Hey ! this is a guide on how to use Crowdsec and Caddy together to secure your Immich and Nextcloud services, all containerized with Docker.
 **Read the full deep-dive and architectural breakdown on my portfolio: [Shakti-3xtorris Portfolio](https://portfolio.shakti-3xtorris.workers.dev/project/circe/)**
 
-## Key Features
-* **Reduced Attack Surface:** Eliminates public SSH exposure using Tailscale 
-* **Active Threat Defense (WAF/IPS):** A custom xCaddy binary integrates with CrowdSec to block automated exploitation, brute-force attempts, and Layer 7 attacks (e.g., XSS, SQLi).
-* **Containerized Isolation:** Services are deployed via Docker using a dedicated external network (`caddy_net_final`) to restrict internal routing.
-* **Tamper-Proof  logs** Nextcloud and Caddy log volumes are mounted as read-only to the CrowdSec container, preventing unauthorized log modification if the container is breached.
-* **Data Resilience:** ZFS storage pool in a RAID 1 mirror configuration with automated, granular rollback points managed by Sanoid. (this is fully optional)
-
 ## Table of Contents
+- [Key Features](#Key Features)
 - [Repository Structure](#Repository Structure)
 - [Architecture & Network Segregation](#architecture--network-segregation)
 - [Prerequisites](#prerequisites)
@@ -21,7 +15,12 @@ Hey ! this is a guide on how to use Crowdsec and Caddy together to secure your I
 - [Operations & Troubleshooting](#operations--troubleshooting)
 
 ---
-
+## Key Features
+* **Reduced Attack Surface:** Eliminates public SSH exposure using Tailscale 
+* **Active Threat Defense (WAF/IPS):** A custom xCaddy binary integrates with CrowdSec to block automated exploitation, brute-force attempts, and Layer 7 attacks (e.g., XSS, SQLi).
+* **Containerized Isolation:** Services are deployed via Docker using a dedicated external network (`caddy_net_final`) to restrict internal routing.
+* **Tamper-Proof  logs** Nextcloud and Caddy log volumes are mounted as read-only to the CrowdSec container, preventing unauthorized log modification if the container is breached.
+* **Data Resilience:** ZFS storage pool in a RAID 1 mirror configuration with automated, granular rollback points managed by Sanoid. (this is fully optional)
 ## Repository Structure
 .
 ├── Caddy/
