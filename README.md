@@ -3,8 +3,8 @@ Hey ! this is a guide on how to use Crowdsec and Caddy together to secure your I
 **Read the full deep-dive and architectural breakdown on my portfolio: [Shakti-3xtorris Portfolio](https://portfolio.shakti-3xtorris.workers.dev/project/circe/)**
 
 ## Table of Contents
-- [Key Features](#Key Features)
-- [Repository Structure](#Repository Structure)
+- [Key Features](#Key-Features)
+- [Repository Structure](#Repository-Structure)
 - [Architecture & Network Segregation](#architecture--network-segregation)
 - [Prerequisites](#prerequisites)
 - [Deployment Guide](#deployment-guide)
