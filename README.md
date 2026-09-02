@@ -22,6 +22,8 @@ Hey ! this is a guide on how to use Crowdsec and Caddy together to secure your I
 * **Tamper-Proof  logs** Nextcloud and Caddy log volumes are mounted as read-only to the CrowdSec container, preventing unauthorized log modification if the container is breached.
 * **Data Resilience:** ZFS storage pool in a RAID 1 mirror configuration with automated, granular rollback points managed by Sanoid. (this is fully optional)
 ## Repository Structure
+
+```text
 .
 ├── Caddy/
 │   ├── Caddyfile
@@ -36,6 +38,7 @@ Hey ! this is a guide on how to use Crowdsec and Caddy together to secure your I
 └── nextcloud/
     ├── docker-compose.yml
     └── .env.example
+```
 
 ## Architecture & Network Segregation
 
