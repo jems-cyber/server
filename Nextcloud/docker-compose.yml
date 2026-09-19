@@ -1,0 +1,63 @@
+---
+services:
+  # Note: MariaDB is an external service. You can find more information about the configuration here:
+  # https://hub.docker.com/_/mariadb
+  db:
+    # Note: Check the recommend version here: https://docs.nextcloud.com/server/latest/admin_manual/installation/system_requirements.html#server
+    image: mariadb:lts
+    command: --transaction-isolation=READ-COMMITTED
+    restart: always
+    volumes:
+      - db:/var/lib/mysql:Z
+    environment:
+      - MYSQL_ROOT_PASSWORD=nextcloudsomething
+      - MARIADB_AUTO_UPGRADE=nextcloudsomething
+      - MARIADB_DISABLE_UPGRADE_BACKUP=nextcloudsomething
+    env_file:
+      - db.env
+
+  # Note: Redis is an external service. You can find more information about the configuration here:
+  # https://hub.docker.com/_/redis
+  redis:
+    image: redis:alpine
+    restart: always
+
+  app:
+    image: nextcloud:apache
+    container_name: nextcloud #added this line because i hade nominations trouble with caddyfile
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - nextcloud:/var/www/html:z
+      # NOTE: The `volumes` config of the `cron` and `app` containers must match
+    environment:
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+    env_file:
+      - db.env
+    depends_on:
+      - db
+      - redis
+    networks: 
+      - caddy_net_final #so nextcloud app can talk to caddy
+      - default # so it can also talk to the database and reddis
+
+  cron:
+    image: nextcloud:apache
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html:z
+      # NOTE: The `volumes` config of the `cron` and `app` containers must match
+    entrypoint: /cron.sh
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  db:
+  nextcloud:
+
+networks:
+  caddy_net_final:
+    external: true

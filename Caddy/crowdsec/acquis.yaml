@@ -1,0 +1,21 @@
+filenames:
+  - /var/log/caddy/access.log
+labels:
+  type: caddy
+
+---
+
+#following from https://docs.crowdsec.net/docs/appsec/vpatch_and_crs/
+appsec_configs:
+  - crowdsecurity/appsec-default    # Virtual patching rules (in-band)
+  - crowdsecurity/crs               # OWASP CRS rules (out-of-band)
+labels:
+  type: appsec
+listen_addr: 0.0.0.0:7422  #docker port   
+source: appsec
+
+---
+filenames:
+  - /var/www/html/data/nextcloud.log
+labels:
+  type: nextcloud

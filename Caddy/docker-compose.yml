@@ -1,0 +1,64 @@
+# version: '3' i commented out this line
+# because it gave me a warning telling
+# me it won't be taken into account anyways
+
+services:
+  caddy:
+    build:
+      context: ./
+      target: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - CROWDSEC_API_KEY=${CROWDSEC_API_KEY}
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+      - caddy-logs:/var/log/caddy
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      caddy_net_final:
+    security_opt:
+      - no-new-privileges=true
+
+  crowdsec:
+    image: docker.io/crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+
+    environment:
+      - GID=1000
+      - BOUNCER_KEY_CADDY=${CROWDSEC_API_KEY}
+      - |
+        COLLECTIONS=
+        crowdsecurity/caddy
+        crowdsecurity/http-cve
+        crowdsecurity/whitelist-good-actors
+        crowdsecurity/nextcloud
+        crowdsecurity/appsec-virtual-patching
+        crowdsecurity/appsec-generic-rules
+        crowdsecurity/appsec-crs
+
+    volumes:
+      - crowdsec-db:/var/lib/crowdsec/data/
+      - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - caddy-logs:/var/log/caddy:ro
+      - nextcloud:/var/www/html:ro #added this to work with request limiting on nextcloud
+    networks:
+      caddy_net_final:
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+
+volumes:
+  crowdsec-db:
+  caddy-logs:
+  caddy-data:
+  caddy-config:
+  nextcloud:
+    external: true
+    name: circe-nextcloud_nextcloud
+
+networks:
+  caddy_net_final:
+    external: true

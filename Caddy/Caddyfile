@@ -1,0 +1,38 @@
+#global
+{
+    order crowdsec first
+    order appsec after crowdsec
+
+    crowdsec {
+        api_url http://crowdsec:8080
+        api_key {$CROWDSEC_API_KEY}  #docker compose exec crowdsec cscli bouncer add caddy
+        ticker_interval 10s
+        appsec_url http://crowdsec:7422
+    }
+}
+
+#snippets  
+(crowdsec_secured) {
+    crowdsec
+    appsec  #activates WAF	
+    log acess-log {
+        output file /var/log/caddy/access.log
+    }
+}
+
+#my services 
+
+circe-files.duckdns.org {
+    import crowdsec_secured
+    
+    # Nextcloud requires these two redirects for Calendar and Contacts syncing to work
+    redir /.well-known/carddav /remote.php/dav 301
+    redir /.well-known/caldav /remote.php/dav 301
+    
+    reverse_proxy nextcloud:80
+}
+
+circe-photos.duckdns.org {
+    import crowdsec_secured
+    reverse_proxy immich-server:2283
+}
