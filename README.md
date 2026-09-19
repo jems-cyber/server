@@ -106,7 +106,7 @@ Port configuration :
 ## Deployment Guide
 
 ### 1. (Optional) Storage & Snapshots (ZFS + Sanoid)
-Create a RAID 1 mirror using specific disk IDs to prevent mounting errors if drives are physically swapped:
+Create a RAID 1 mirror using specific disk IDs to prevent mounting errors if drives are physically swapped :
 ```bash
 lsblk --nodeps -o name,serial # Find disk IDs
 zpool create <pool_name> mirror /dev/disk/by-id/<disk1-id> /dev/disk/by-id/<disk2-id>
